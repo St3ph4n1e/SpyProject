@@ -8,7 +8,7 @@ require('dotenv').config()
 const SERIAL_PORT = process.env.SERIAL_PORT;
 
 var xbeeAPI = new xbee_api.XBeeAPI({
-  api_mode: 1
+  api_mode: 2
 });
 
 let serialport = new SerialPort(SERIAL_PORT, {
@@ -49,6 +49,7 @@ xbeeAPI.parser.on("data", function (frame) {
 
   //on new device is joined, register it
 
+  
   //on packet received, dispatch event
   //let dataReceived = String.fromCharCode.apply(null, frame.data);
   if (C.FRAME_TYPE.ZIGBEE_RECEIVE_PACKET === frame.type) {
@@ -66,7 +67,8 @@ xbeeAPI.parser.on("data", function (frame) {
   } else if (C.FRAME_TYPE.ZIGBEE_IO_DATA_SAMPLE_RX === frame.type) {
 
     console.log("ZIGBEE_IO_DATA_SAMPLE_RX")
-    console.log(frame.analogSamples.AD0)
+    console.log(frame);
+    //console.log(frame.analogSamples)
     //storage.registerSample(frame.remote64,frame.analogSamples.AD0 )
 
   } else if (C.FRAME_TYPE.REMOTE_COMMAND_RESPONSE === frame.type) {
