@@ -66,7 +66,7 @@ xbeeAPI.parser.on("data", function (frame) {
   } else if (C.FRAME_TYPE.ZIGBEE_IO_DATA_SAMPLE_RX === frame.type) {
 
     console.log("ZIGBEE_IO_DATA_SAMPLE_RX")
-    console.log(frame.analogSamples.AD0)
+    console.log(frame.analogSamples.AD1)
     //storage.registerSample(frame.remote64,frame.analogSamples.AD0 )
 
   } else if (C.FRAME_TYPE.REMOTE_COMMAND_RESPONSE === frame.type) {
@@ -78,3 +78,38 @@ xbeeAPI.parser.on("data", function (frame) {
   }
 
 });
+
+
+const mqtt = require("mqtt");
+const client = mqtt.connect("mqtt://test.mosquitto.org");
+
+client.on("connect", () => {
+  client.subscribe("presence", (err) => {
+    if (!err) {
+      client.publish("presence", "Hello mqtt");
+    }
+  });
+});
+
+client.on("message", (topic, message) => {
+  // message is Buffer
+  console.log(message.toString());
+  client.end();
+});
+
+const winston = require('winston');
+
+// Configuration du logger
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'server.log' }),
+  ],
+});
+
+
+// Dans votre code pour enregistrer un message :
+logger.info('Une tentative de connexion a été reçue');
+
