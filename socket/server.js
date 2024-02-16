@@ -73,7 +73,7 @@ xbeeAPI.parser.on("data", function (frame) {
 
   //on new device is joined, register it
 
-
+  
   //on packet received, dispatch event
   //let dataReceived = String.fromCharCode.apply(null, frame.data);
   if (C.FRAME_TYPE.ZIGBEE_RECEIVE_PACKET === frame.type) {
