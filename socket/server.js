@@ -26,6 +26,17 @@ client.on("connect",function(){
 client.on("message", (topic, message)=>{
   console.log("on message");
   console.log(topic, message.toString())
+  if (message.toString() == "FinduGame") {
+    frame_obj = { // AT Request to be sent
+      type: C.FRAME_TYPE.REMOTE_AT_COMMAND_REQUEST,
+      destination64: digicodeAddr,
+      command: "D0",
+      commandParameter: [4],
+    };
+    xbeeAPI.builder.write(frame_obj);
+
+    
+  }
 
   // Receive message from device when finished
 })
@@ -105,11 +116,20 @@ xbeeAPI.parser.on("data", function (frame) {
 
         if (dataReceived.includes("123A456")) {
           client.publish("Spyproject", 'Code Correct');
+
+              frame_obj = { // AT Request to be sent
+                type: C.FRAME_TYPE.REMOTE_AT_COMMAND_REQUEST,
+                destination64: digicodeAddr,
+                command: "D0",
+                commandParameter: [5],
+              };
+              xbeeAPI.builder.write(frame_obj);
+
+            }
         }
       
     }
     
-   }
 
 
   }
