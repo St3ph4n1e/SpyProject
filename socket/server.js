@@ -102,15 +102,9 @@ xbeeAPI.parser.on("data", function (frame) {
 
       if (frame["remote64"] == digicodeAddr) {
 
-        console.log("7777777777777777");
-        console.log(dataReceived);
-        console.log("7777777777777777");
 
         if (dataReceived.includes("123A456")) {
-          console.log("envoiiiiiiiiii");
           client.publish("Spyproject", 'Code Correct');
-        } else {
-
         }
       
     }
