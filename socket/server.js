@@ -5,7 +5,8 @@ var C = xbee_api.constants;
 require('dotenv').config()
 var mqtt = require('mqtt');
 const finishLineAddr = "0013a20041fb76ea" ;
-const startLineAddr = "0013a";
+const startLineAddr = "0013a20041fb7750";
+const digicodeAddr = "0013a20041582fc0";
 
 
 
@@ -25,6 +26,17 @@ client.on("connect",function(){
 client.on("message", (topic, message)=>{
   console.log("on message");
   console.log(topic, message.toString())
+  if (message.toString() == "FinduGame") {
+    frame_obj = { // AT Request to be sent
+      type: C.FRAME_TYPE.REMOTE_AT_COMMAND_REQUEST,
+      destination64: digicodeAddr,
+      command: "D0",
+      commandParameter: [4],
+    };
+    xbeeAPI.builder.write(frame_obj);
+
+    
+  }
 
   // Receive message from device when finished
 })
@@ -98,10 +110,26 @@ xbeeAPI.parser.on("data", function (frame) {
         console.log("Motion detected at start line");
         client.publish('Spyproject', 'start chrono');
     }
-    
+
+      if (frame["remote64"] == digicodeAddr) {
 
 
+        if (dataReceived.includes("123A456")) {
+          client.publish("Spyproject", 'Code Correct');
+
+              frame_obj = { // AT Request to be sent
+                type: C.FRAME_TYPE.REMOTE_AT_COMMAND_REQUEST,
+                destination64: digicodeAddr,
+                command: "D0",
+                commandParameter: [5],
+              };
+              xbeeAPI.builder.write(frame_obj);
+
+            }
+        }
+      
     }
+    
 
 
   }
