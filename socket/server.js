@@ -5,7 +5,8 @@ var C = xbee_api.constants;
 require('dotenv').config()
 var mqtt = require('mqtt');
 const finishLineAddr = "0013a20041fb76ea" ;
-const startLineAddr = "0013a";
+const startLineAddr = "0013a20041fb7750";
+const digicodeAddr = "0013a20041582fc0";
 
 
 
@@ -98,10 +99,23 @@ xbeeAPI.parser.on("data", function (frame) {
         console.log("Motion detected at start line");
         client.publish('Spyproject', 'start chrono');
     }
-    
 
+      if (frame["remote64"] == digicodeAddr) {
 
+        console.log("7777777777777777");
+        console.log(dataReceived);
+        console.log("7777777777777777");
+
+        if (dataReceived.includes("123A456")) {
+          console.log("envoiiiiiiiiii");
+          client.publish("Spyproject", 'Code Correct');
+        } else {
+
+        }
+      
     }
+    
+   }
 
 
   }
